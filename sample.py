@@ -1,4 +1,4 @@
-import MySQLdb
+import pymysql.cursors
 import pandas as pd
 
 from datetime import datetime
@@ -6,7 +6,7 @@ from datetime import datetime
 current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 print (current_date)
 
-connection = MySQLdb.connect(
+connection = pymysql.connect(
     host='localhost',
     user='test',
     passwd='test',
@@ -14,9 +14,9 @@ connection = MySQLdb.connect(
 cursor = connection.cursor()
 
 try:
-    cursor.execute("SELECT * FROM user")
-    for row in cursor:
-        print (row)
+    res = pd.read_sql("SELECT * FROM user", con = connection)
+    print (res)
+    print ("'" + "','".join(res['name'].values) + "'")
 
     df = pd.read_table('sample.tsv',
         names=['flg', 'name', 'pswd', 'fail', 'type', 'valid'])
